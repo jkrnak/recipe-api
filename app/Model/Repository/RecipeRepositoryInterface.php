@@ -14,4 +14,12 @@ interface RecipeRepositoryInterface
      * @return Recipe|null
      */
     public function find(int $id): ?Recipe;
+
+    /**
+     * @param array $criteria
+     * @param int $page Zero based
+     * @param int $pageSize
+     * @return Recipe[]
+     */
+    public function findBy(array $criteria = [], int $page = 0, int $pageSize = 10): array;
 }

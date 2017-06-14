@@ -12,3 +12,5 @@
 */
 
 Route::get('recipe/{id}','RecipeController@show');
+
+Route::get('recipe','RecipeController@list');

@@ -26,19 +26,69 @@ class CsvRecipeRepository implements RecipeRepositoryInterface
      */
     public function find(int $id): ?Recipe
     {
+        $recipes = $this->findBy(['id' => $id], 0, 1);
+        if ($recipes) {
+            return $recipes[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findBy(array $criteria = [], int $page = 0, int $pageSize = 10): array
+    {
         $fp = fopen($this->csvPath, 'r');
-        $recipe = null;
-        while (!feof($fp)) {
-            $row = fgetcsv($fp);
-            if ((int) $row[0] === $id) {
-                $recipe = $this->createRecipeFromRow($row);
+        $recipes = [];
+
+        $headers = fgetcsv($fp);
+        if (!$headers) {
+            fclose($fp);
+            return $recipes;
+        }
+
+        // clean up criteria
+        foreach ($criteria as $key => $value) {
+            if (!in_array($key, $headers)) {
+                unset($criteria[$key]);
+            }
+        }
+
+        $skip = ($page) * $pageSize;
+
+        $matchIndex = 0;
+        while ($row = fgetcsv($fp)) {
+            $rowWithHeaders = array_combine($headers, $row);
+
+            // filtering
+            $match = true;
+            foreach ($criteria as $key => $value) {
+                if ($rowWithHeaders[$key] != $value) {
+                    $match = false;
+                    break;
+                }
+            }
+            if (!$match) {
+                continue;
+            }
+
+            $matchIndex += 1;
+            if ($matchIndex <= $skip) {
+                continue;
+            }
+
+            $recipes[] = $this->createRecipeFromRow(array_values($rowWithHeaders));
+
+            if (count($recipes) === $pageSize) {
                 break;
             }
         }
         fclose($fp);
 
-        return $recipe;
+        return $recipes;
     }
+
 
     private function createRecipeFromRow(array $row): Recipe
     {

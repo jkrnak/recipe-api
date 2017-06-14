@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\ListingParameters;
 use App\Model\Repository\RecipeRepositoryInterface;
 use App\Transformer\Generic\RecipeTransformer;
 use EllipseSynergie\ApiResponse\Contracts\Response;
+use Illuminate\Http\Request;
 
 class RecipeController extends Controller
 {
@@ -32,4 +34,16 @@ class RecipeController extends Controller
         return $this->response->withItem($recipe, new RecipeTransformer());
     }
 
+    public function list(Request $request)
+    {
+        $listingParameters = ListingParameters::createFromRequest($request);
+
+        $recipes = $this->recipeRepository->findBy(
+            $listingParameters->getCriteria(),
+            $listingParameters->getPage(),
+            $listingParameters->getPageSize()
+        );
+
+        return $this->response->withCollection($recipes, new RecipeTransformer());
+    }
 }
