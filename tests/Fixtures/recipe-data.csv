@@ -1,0 +1,2 @@
+id,created_at,updated_at,box_type,title,slug,short_title,marketing_description,calories_kcal,protein_grams,fat_grams,carbs_grams,bulletpoint1,bulletpoint2,bulletpoint3,recipe_diet_type_id,season,base,protein_source,preparation_time_minutes,shelf_life_days,equipment_needed,origin_country,recipe_cuisine,in_your_box,gousto_reference
+1,30/06/2015 17:58:00,30/06/2015 17:58:00,vegetarian,My Recipe,my-recipe,,"fancy description",400,10,30,10,,,,meat,all,noodles,beef,35,4,Appetite,Great Britain,asian,,59

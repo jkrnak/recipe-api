@@ -124,6 +124,8 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+    'csv_path' => base_path(env('RECIPE_CSV_PATH')),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -177,6 +179,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        EllipseSynergie\ApiResponse\Laravel\ResponseServiceProvider::class,
+        App\Providers\RecipeRepositoryProvider::class,
     ],
 
     /*
