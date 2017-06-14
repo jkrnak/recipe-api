@@ -12,7 +12,7 @@ class RecipeRepositoryProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton(RecipeRepositoryInterface::class, function($app) {
+        $this->app->singleton(RecipeRepositoryInterface::class, function ($app) {
             return new CsvRecipeRepository($app['config']->get('app')['csv_path']);
         });
     }

@@ -22,5 +22,5 @@ class ListingParameterTest extends TestCase
         $this->assertEquals(1, $listingParameters->getPage());
         $this->assertEquals(10, $listingParameters->getPageSize());
         $this->assertEquals([], $listingParameters->getCriteria());
-   }
+    }
 }

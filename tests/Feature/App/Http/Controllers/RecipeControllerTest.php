@@ -69,5 +69,4 @@ class RecipeControllerTest extends TestCase
                 ]
             ]);
     }
-
 }

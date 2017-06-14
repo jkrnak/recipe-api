@@ -6,3 +6,6 @@ build:
 
 test:
 	docker run --rm $(DOCKER_IMAGE_NAME) ./vendor/bin/phpunit
+
+phpcs:
+	docker run --rm $(DOCKER_IMAGE_NAME) ./vendor/bin/phpcs --standard=PSR2 --ignore=vendor/,database/,storage/framework/,resources/,bootstrap/ --extensions=php ./
