@@ -160,7 +160,9 @@ class CsvRecipeRepository implements RecipeRepositoryInterface
             ->setOriginCountry($row[22])
             ->setRecipeCuisine($row[23])
             ->setInYourBox(explode(',', $row[24]))
-            ->setGoustoReference((int) $row[25]);
+            ->setGoustoReference((int) $row[25])
+            ->setAverageRating((float) $row[26])
+            ->setRatingCount((int) $row[27]);
 
         return $recipe;
     }
@@ -194,6 +196,8 @@ class CsvRecipeRepository implements RecipeRepositoryInterface
             $recipe->getRecipeCuisine(),
             implode(',', $recipe->getInYourBox()),
             $recipe->getGoustoReference(),
+            $recipe->getAverageRating(),
+            $recipe->getRatingCount(),
         ];
     }
 }

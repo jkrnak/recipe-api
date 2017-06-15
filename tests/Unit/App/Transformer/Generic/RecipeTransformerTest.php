@@ -17,7 +17,8 @@ class RecipeTransformerTest extends TestCase
             ->setCaloriesKcal(100)
             ->setFatGrams(200)
             ->setProteinGrams(250)
-            ->setCarbsGrams(120);
+            ->setCarbsGrams(120)
+            ->addRating(5);
 
         $expectedTransformation = [
             'id' => 1,
@@ -27,6 +28,8 @@ class RecipeTransformerTest extends TestCase
             'fat' => 200,
             'protein' => 250,
             'carbohydrates' => 120,
+            'average_rating' => 5,
+            'rating_count' => 1,
         ];
 
         $transformer = new RecipeTransformer();

@@ -56,6 +56,10 @@ class Recipe
     private $inYourBox = [];
     /** @var int */
     private $goustoReference;
+    /** @var int */
+    private $ratingCount = 0;
+    /** @var float */
+    private $averageRating;
 
     public function __construct()
     {
@@ -528,6 +532,51 @@ class Recipe
     public function setGoustoReference(int $goustoReference): Recipe
     {
         $this->goustoReference = $goustoReference;
+        return $this;
+    }
+
+    public function addRating(float $rating): Recipe
+    {
+        $this->averageRating =
+            ($this->averageRating * $this->getRatingCount() + $rating) / ($this->getRatingCount() + 1);
+        $this->ratingCount += 1;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRatingCount(): int
+    {
+        return $this->ratingCount;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAverageRating(): float
+    {
+        return round($this->averageRating, 1);
+    }
+
+    /**
+     * @param int $ratingCount
+     * @return Recipe
+     */
+    public function setRatingCount(int $ratingCount): Recipe
+    {
+        $this->ratingCount = $ratingCount;
+        return $this;
+    }
+
+    /**
+     * @param float $averageRating
+     * @return Recipe
+     */
+    public function setAverageRating(float $averageRating): Recipe
+    {
+        $this->averageRating = $averageRating;
         return $this;
     }
 }

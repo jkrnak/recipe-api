@@ -146,6 +146,101 @@ class RecipeControllerTest extends TestCase
             ]);
     }
 
+    public function testRateRecipe()
+    {
+        $response = $this->json('PUT', '/api/recipe/1/rate', [
+            'rating' => 5,
+        ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    'id' => 1,
+                    'title' => 'My Recipe',
+                    'average_rating' => 5,
+                    'rating_count' => 1,
+                ]
+            ]);
+
+        $response = $this->json('PUT', '/api/recipe/1/rate', [
+            'rating' => 4,
+        ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    'average_rating' => 4.5,
+                    'rating_count' => 2,
+                ]
+            ]);
+    }
+
+    public function testRateNonExistingRecipe()
+    {
+        $response = $this->json('PUT', '/api/recipe/100/rate', [
+            'rate' => 5,
+        ]);
+
+        $response
+            ->assertStatus(404)
+            ->assertJson([
+                'error' => [
+                    'code' => 'GEN-NOT-FOUND',
+                    'http_code' => 404,
+                    'message' => 'Recipe Not Found',
+                ]
+            ]);
+    }
+
+    public function testInvalidRate()
+    {
+        $response = $this->json('PUT', '/api/recipe/1/rate', [
+            'rating' => 0,
+        ]);
+
+        $response
+            ->assertStatus(400)
+            ->assertJson([
+                'error' => [
+                    'code' => 'GEN-WRONG-ARGS',
+                    'http_code' => 400,
+                    'message' => [
+                        'rating' => ['The rating must be at least 1.'],
+                    ]
+                ]
+            ]);
+
+        $response = $this->json('PUT', '/api/recipe/1/rate', [
+            'rating' => 6,
+        ]);
+
+        $response
+            ->assertStatus(400)
+            ->assertJson([
+                'error' => [
+                    'code' => 'GEN-WRONG-ARGS',
+                    'http_code' => 400,
+                    'message' => [
+                        'rating' => ['The rating may not be greater than 5.'],
+                    ]
+                ]
+            ]);
+
+        $response = $this->json('PUT', '/api/recipe/1/rate');
+        $response
+            ->assertStatus(400)
+            ->assertJson([
+                'error' => [
+                    'message' => [
+                        'rating' => ['The rating field is required.'],
+                    ]
+                ]
+            ]);
+    }
+
+
     protected function tearDown()
     {
         $fixturePath = $this->app['config']->get('app')['csv_path'];

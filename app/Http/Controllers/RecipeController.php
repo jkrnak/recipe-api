@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Model\ListingParameters;
-use App\Model\Recipe;
 use App\Model\Repository\RecipeRepositoryInterface;
 use App\Transformer\Generic\RecipeTransformer;
 use EllipseSynergie\ApiResponse\Contracts\Response;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as IlluminateResponse;
+use Illuminate\Validation\ValidationException;
 
 class RecipeController extends Controller
 {
@@ -69,6 +69,31 @@ class RecipeController extends Controller
 
         return $this->response
             ->setStatusCode($successResponseCode)
+            ->withItem($recipe, new RecipeTransformer());
+    }
+
+    public function rate(Request $request, $id)
+    {
+        $recipe = $this->recipeRepository->find($id);
+
+        if (!$recipe) {
+            return $this->response->errorNotFound('Recipe Not Found');
+        }
+
+        try {
+            $this->validate($request, [
+                'rating' => 'required|numeric|min:1|max:5',
+            ]);
+        } catch (ValidationException $e) {
+            return $this->response->errorWrongArgs($e->validator->getMessageBag()->toArray());
+        }
+
+        $recipe->addRating($request->json('rating'));
+
+        $this->recipeRepository->save($recipe);
+
+        return $this->response
+            ->setStatusCode(IlluminateResponse::HTTP_OK)
             ->withItem($recipe, new RecipeTransformer());
     }
 }

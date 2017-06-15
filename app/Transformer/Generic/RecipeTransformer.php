@@ -46,6 +46,8 @@ class RecipeTransformer extends TransformerAbstract implements RecipeTransformer
             'protein' => $recipe->getProteinGrams(),
             'fat' => $recipe->getFatGrams(),
             'carbohydrates' => $recipe->getCarbsGrams(),
+            'average_rating' => $recipe->getAverageRating(),
+            'rating_count' => $recipe->getRatingCount(),
         ];
     }
 

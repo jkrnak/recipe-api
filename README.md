@@ -100,3 +100,16 @@ Body can be any partial of the following JSON:
 `Content-type: application/json`
 
 See the create endpoint for request body example.
+
+### Rate a Recipe
+
+`PUT /api/recipe/{id}/rate`
+
+`Content-type: application/json`
+
+Body:
+```
+{
+    "rating": 5
+}
+```

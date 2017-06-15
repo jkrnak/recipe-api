@@ -1,5 +1,5 @@
-id,created_at,updated_at,box_type,title,slug,short_title,marketing_description,calories_kcal,protein_grams,fat_grams,carbs_grams,bulletpoint1,bulletpoint2,bulletpoint3,recipe_diet_type_id,season,base,protein_source,preparation_time_minutes,shelf_life_days,equipment_needed,origin_country,recipe_cuisine,in_your_box,gousto_reference
-1,"30/06/2015 17:58:00","30/06/2015 17:58:00",normal,"My Recipe",my-recipe,,"fancy description",400,10,30,10,,,,meat,all,noodles,beef,35,4,Appetite,"Great Britain",asian,,59
-2,"30/06/2015 17:58:00","30/06/2015 17:58:00",normal,"My Recipe 2",my-recipe-2,,"fancy description",401,11,31,11,,,,meat,all,rice,chicken,35,4,Appetite,"Great Britain",french,,59
-3,"30/06/2015 17:58:00","30/06/2015 17:58:00",vegetarian,"My Recipe 3",my-recipe-3,,"fancy description",402,12,32,12,,,,meat,all,bagel,"peanut butter",35,4,Appetite,"Great Britain",american,,59
-4,"01/07/2015 17:58:00","01/07/2015 17:58:00",normal,"My Recipe 4",my-recipe-4,,"fancy description",403,13,33,13,,,,meat,all,salad,pork,35,4,Appetite,"Great Britain",asian,,59
+id,created_at,updated_at,box_type,title,slug,short_title,marketing_description,calories_kcal,protein_grams,fat_grams,carbs_grams,bulletpoint1,bulletpoint2,bulletpoint3,recipe_diet_type_id,season,base,protein_source,preparation_time_minutes,shelf_life_days,equipment_needed,origin_country,recipe_cuisine,in_your_box,gousto_reference,average_rating,rating_count
+1,"30/06/2015 17:58:00","30/06/2015 17:58:00",normal,"My Recipe",my-recipe,,"fancy description",400,10,30,10,,,,meat,all,noodles,beef,35,4,Appetite,"Great Britain",asian,,59,,
+2,"30/06/2015 17:58:00","30/06/2015 17:58:00",normal,"My Recipe 2",my-recipe-2,,"fancy description",401,11,31,11,,,,meat,all,rice,chicken,35,4,Appetite,"Great Britain",french,,59,,
+3,"30/06/2015 17:58:00","30/06/2015 17:58:00",vegetarian,"My Recipe 3",my-recipe-3,,"fancy description",402,12,32,12,,,,meat,all,bagel,"peanut butter",35,4,Appetite,"Great Britain",american,,59,,
+4,"01/07/2015 17:58:00","01/07/2015 17:58:00",normal,"My Recipe 4",my-recipe-4,,"fancy description",403,13,33,13,,,,meat,all,salad,pork,35,4,Appetite,"Great Britain",asian,,59,,
