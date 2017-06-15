@@ -108,6 +108,44 @@ class RecipeControllerTest extends TestCase
             ]);
     }
 
+    public function testUpdateRecipe()
+    {
+        $response = $this->json('PUT', '/api/recipe/1', [
+            'title' => 'Updating Title',
+        ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    'id' => 1,
+                    'title' => 'Updating Title',
+                    'description' => 'fancy description',
+                    'calories' => 400,
+                    'protein' => 10,
+                    'fat' => 30,
+                    'carbohydrates' => 10,
+                ]
+            ]);
+    }
+
+    public function testUpdateNonExistingRecipe()
+    {
+        $response = $this->json('PUT', '/api/recipe/100', [
+            'title' => 'Updating Title',
+        ]);
+
+        $response
+            ->assertStatus(404)
+            ->assertJson([
+                'error' => [
+                    'code' => 'GEN-NOT-FOUND',
+                    'http_code' => 404,
+                    'message' => 'Recipe Not Found',
+                ]
+            ]);
+    }
+
     protected function tearDown()
     {
         $fixturePath = $this->app['config']->get('app')['csv_path'];

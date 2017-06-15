@@ -16,3 +16,5 @@ Route::get('recipe/{id}', 'RecipeController@show')->middleware('api');
 Route::get('recipe', 'RecipeController@list')->middleware('api');
 
 Route::post('recipe', 'RecipeController@store')->middleware('api');
+
+Route::put('recipe/{id}', 'RecipeController@store')->middleware('api');

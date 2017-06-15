@@ -48,15 +48,27 @@ class RecipeController extends Controller
         return $this->response->withCollection($recipes, new RecipeTransformer());
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $id = null)
     {
         $transformer = new RecipeTransformer();
-        $recipe = $transformer->reverseTransform($request->json()->all());
+        $recipe = null;
+        $successResponseCode = IlluminateResponse::HTTP_CREATED;
+        if (!is_null($id)) {
+            $recipe = $this->recipeRepository->find($id);
+
+            if (!$recipe) {
+                return $this->response->errorNotFound('Recipe Not Found');
+            }
+
+            $successResponseCode = IlluminateResponse::HTTP_OK;
+        }
+
+        $recipe = $transformer->reverseTransform($request->json()->all(), $recipe);
 
         $this->recipeRepository->save($recipe);
 
         return $this->response
-            ->setStatusCode(IlluminateResponse::HTTP_CREATED)
+            ->setStatusCode($successResponseCode)
             ->withItem($recipe, new RecipeTransformer());
     }
 }

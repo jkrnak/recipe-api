@@ -50,8 +50,10 @@ make run PORT=8181
 
 ### Create a Recipe
 `POST /api/recipe`
+
 `Content-type: application/json`
-Body:
+
+Body can be any partial of the following JSON:
 ```
 {
   "title": "My Recipe",
@@ -91,3 +93,10 @@ Body:
 
 `GET /api/recipe?page=1&pageSize=10&criteria[recipe_cuisine]=asian`
 
+### Update Recipe by Id
+
+`PUT /api/recipe/{id}`
+
+`Content-type: application/json`
+
+See the create endpoint for request body example.
