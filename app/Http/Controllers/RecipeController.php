@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\ListingParameters;
 use App\Model\Repository\RecipeRepositoryInterface;
-use App\Transformer\Generic\RecipeTransformer;
+use App\Transformer\RecipeTransformerInterface;
 use EllipseSynergie\ApiResponse\Contracts\Response;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as IlluminateResponse;
@@ -18,10 +18,18 @@ class RecipeController extends Controller
     /** @var RecipeRepositoryInterface */
     private $recipeRepository;
 
-    public function __construct(Response $response, RecipeRepositoryInterface $recipeRepository)
+    /** @var RecipeTransformerInterface */
+    private $transformer;
+
+    public function __construct(
+        Response $response,
+        RecipeRepositoryInterface $recipeRepository,
+        RecipeTransformerInterface $transformer
+    )
     {
         $this->response = $response;
         $this->recipeRepository = $recipeRepository;
+        $this->transformer = $transformer;
     }
 
     public function show($id)
@@ -32,7 +40,7 @@ class RecipeController extends Controller
             return $this->response->errorNotFound('Recipe Not Found');
         }
 
-        return $this->response->withItem($recipe, new RecipeTransformer());
+        return $this->response->withItem($recipe, $this->transformer);
     }
 
     public function list(Request $request)
@@ -45,12 +53,11 @@ class RecipeController extends Controller
             $listingParameters->getPageSize()
         );
 
-        return $this->response->withCollection($recipes, new RecipeTransformer());
+        return $this->response->withCollection($recipes, $this->transformer);
     }
 
     public function store(Request $request, $id = null)
     {
-        $transformer = new RecipeTransformer();
         $recipe = null;
         $successResponseCode = IlluminateResponse::HTTP_CREATED;
         if (!is_null($id)) {
@@ -63,13 +70,13 @@ class RecipeController extends Controller
             $successResponseCode = IlluminateResponse::HTTP_OK;
         }
 
-        $recipe = $transformer->reverseTransform($request->json()->all(), $recipe);
+        $recipe = $this->transformer->reverseTransform($request->json()->all(), $recipe);
 
         $this->recipeRepository->save($recipe);
 
         return $this->response
             ->setStatusCode($successResponseCode)
-            ->withItem($recipe, new RecipeTransformer());
+            ->withItem($recipe, $this->transformer);
     }
 
     public function rate(Request $request, $id)
@@ -94,6 +101,6 @@ class RecipeController extends Controller
 
         return $this->response
             ->setStatusCode(IlluminateResponse::HTTP_OK)
-            ->withItem($recipe, new RecipeTransformer());
+            ->withItem($recipe, $this->transformer);
     }
 }

@@ -181,6 +181,7 @@ return [
 
         EllipseSynergie\ApiResponse\Laravel\ResponseServiceProvider::class,
         App\Providers\RecipeRepositoryProvider::class,
+        App\Providers\RecipeTransformerProvider::class,
     ],
 
     /*
