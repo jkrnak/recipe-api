@@ -1,5 +1,34 @@
 # Gousto Recipe API
 
+## Decisions
+
+### Docker
+
+Defining requirements for a project with all the dependencies and versions could take up a lot of time while setting up a project.
+Using docker allows this project to be isolated and self containing and allows the setup to be controlled. 
+
+### Framework
+
+I chose the Laravel framework to get familiar with it. I haven't used Laravel in the past and this looked like a good opportunity to learn more about it.
+The framework is really developer friendly, much more opinionated than Symfony. 
+It's really easy to get going with it.
+
+The application is running on PHP 7.1
+
+### Different API consumers
+
+The setup currently injects in a generic transformer for the recipes. This transformer generates the output format which each API consumer gets.
+It also converts request bodys to recipes when updating or creating new recipes.
+
+The transformation has an interface so this could be extended into different formats depending on what the consumer wants.
+There could be an HTTP request header which states who is the consumer, something like `X-Consumer: mobile` .
+A factory then could pick up this header from the request and create the appropriate formatter. This factory could be injected
+into the controller.
+
+But if we are expecting a lot of different formats based on client requirements we should probably evaluate using GraphQL 
+which then would allow the clients to define their own response formats and what data they want to retrieve.
+
+
 ## Prerequisities
 
  * docker
@@ -113,3 +142,5 @@ Body:
     "rating": 5
 }
 ```
+
+For more information on endpoints see the functional test called RecipeControllerTest.

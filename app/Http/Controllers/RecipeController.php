@@ -25,8 +25,7 @@ class RecipeController extends Controller
         Response $response,
         RecipeRepositoryInterface $recipeRepository,
         RecipeTransformerInterface $transformer
-    )
-    {
+    ) {
         $this->response = $response;
         $this->recipeRepository = $recipeRepository;
         $this->transformer = $transformer;
