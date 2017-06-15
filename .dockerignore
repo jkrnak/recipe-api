@@ -1,1 +1,6 @@
+bootstrap/cache
+config/apache
+storage/app
+storage/framework
+storage/logs
 vendor/

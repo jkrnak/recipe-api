@@ -4,6 +4,7 @@ ENV COMPOSER_HOME /opt/composer
 ENV PATH /opt/composer:$PATH
 ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN apt-get update && apt-get install zip unzip -y && apt-get clean \
+  && a2enmod rewrite \
   && mkdir -p /opt/composer \
   && curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
   && curl -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \
@@ -13,6 +14,10 @@ RUN apt-get update && apt-get install zip unzip -y && apt-get clean \
   && chmod +x /opt/composer/composer
 
 COPY . /var/www/html
+COPY config/apache2/000-default.conf /etc/apache2/sites-available/
 
-RUN composer install \
+RUN mkdir -p /var/www/html/bootstrap/cache \
+  && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+  && composer install \
   && composer clear-cache
+

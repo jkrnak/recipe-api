@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('recipe/{id}', 'RecipeController@show');
+Route::get('recipe/{id}', 'RecipeController@show')->middleware('api');
 
-Route::get('recipe', 'RecipeController@list');
+Route::get('recipe', 'RecipeController@list')->middleware('api');
