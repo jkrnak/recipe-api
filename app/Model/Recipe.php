@@ -53,14 +53,20 @@ class Recipe
     /** @var string */
     private $recipeCuisine;
     /** @var string[] */
-    private $inYourBox;
+    private $inYourBox = [];
     /** @var int */
     private $goustoReference;
+
+    public function __construct()
+    {
+        $this->setCreatedAt(new \DateTimeImmutable());
+        $this->setUpdatedAt(new \DateTimeImmutable());
+    }
 
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -114,7 +120,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getBoxType(): string
+    public function getBoxType(): ?string
     {
         return $this->boxType;
     }
@@ -132,7 +138,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
@@ -150,7 +156,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getSlug(): string
+    public function getSlug(): ?string
     {
         return $this->slug;
     }
@@ -168,7 +174,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getShortTitle(): string
+    public function getShortTitle(): ?string
     {
         return $this->shortTitle;
     }
@@ -186,7 +192,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getMarketingDescription(): string
+    public function getMarketingDescription(): ?string
     {
         return $this->marketingDescription;
     }
@@ -204,7 +210,7 @@ class Recipe
     /**
      * @return int
      */
-    public function getCaloriesKcal(): int
+    public function getCaloriesKcal(): ?int
     {
         return $this->caloriesKcal;
     }
@@ -222,7 +228,7 @@ class Recipe
     /**
      * @return int
      */
-    public function getProteinGrams(): int
+    public function getProteinGrams(): ?int
     {
         return $this->proteinGrams;
     }
@@ -240,7 +246,7 @@ class Recipe
     /**
      * @return int
      */
-    public function getFatGrams(): int
+    public function getFatGrams(): ?int
     {
         return $this->fatGrams;
     }
@@ -258,7 +264,7 @@ class Recipe
     /**
      * @return int
      */
-    public function getCarbsGrams(): int
+    public function getCarbsGrams(): ?int
     {
         return $this->carbsGrams;
     }
@@ -276,7 +282,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getBulletpoint1(): string
+    public function getBulletpoint1(): ?string
     {
         return $this->bulletpoint1;
     }
@@ -294,7 +300,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getBulletpoint2(): string
+    public function getBulletpoint2(): ?string
     {
         return $this->bulletpoint2;
     }
@@ -312,7 +318,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getBulletpoint3(): string
+    public function getBulletpoint3(): ?string
     {
         return $this->bulletpoint3;
     }
@@ -330,7 +336,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getRecipeDietTypeId(): string
+    public function getRecipeDietTypeId(): ?string
     {
         return $this->recipeDietTypeId;
     }
@@ -348,7 +354,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getSeason(): string
+    public function getSeason(): ?string
     {
         return $this->season;
     }
@@ -366,7 +372,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getBase(): string
+    public function getBase(): ?string
     {
         return $this->base;
     }
@@ -384,7 +390,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getProteinSource(): string
+    public function getProteinSource(): ?string
     {
         return $this->proteinSource;
     }
@@ -402,7 +408,7 @@ class Recipe
     /**
      * @return int
      */
-    public function getPreparationTimeMinutes(): int
+    public function getPreparationTimeMinutes(): ?int
     {
         return $this->preparationTimeMinutes;
     }
@@ -420,7 +426,7 @@ class Recipe
     /**
      * @return int
      */
-    public function getShelfLifeDays(): int
+    public function getShelfLifeDays(): ?int
     {
         return $this->shelfLifeDays;
     }
@@ -438,7 +444,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getEquipmentNeeded(): string
+    public function getEquipmentNeeded(): ?string
     {
         return $this->equipmentNeeded;
     }
@@ -456,7 +462,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getOriginCountry(): string
+    public function getOriginCountry(): ?string
     {
         return $this->originCountry;
     }
@@ -474,7 +480,7 @@ class Recipe
     /**
      * @return string
      */
-    public function getRecipeCuisine(): string
+    public function getRecipeCuisine(): ?string
     {
         return $this->recipeCuisine;
     }
@@ -510,7 +516,7 @@ class Recipe
     /**
      * @return int
      */
-    public function getGoustoReference(): int
+    public function getGoustoReference(): ?int
     {
         return $this->goustoReference;
     }

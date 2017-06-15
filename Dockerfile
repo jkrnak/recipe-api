@@ -13,11 +13,15 @@ RUN apt-get update && apt-get install zip unzip -y && apt-get clean \
   && mv /opt/composer/composer.phar /opt/composer/composer \
   && chmod +x /opt/composer/composer
 
-COPY . /var/www/html
 COPY config/apache2/000-default.conf /etc/apache2/sites-available/
 
-RUN mkdir -p /var/www/html/bootstrap/cache \
-  && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-  && composer install \
+COPY composer.* /var/www/html/
+
+RUN composer install --no-autoloader --no-custom-installers --no-scripts --no-suggest \
   && composer clear-cache
 
+COPY . /var/www/html
+
+RUN mkdir -p bootstrap/cache \
+  && chown -R www-data:www-data storage bootstrap/cache database \
+  && composer install --no-suggest

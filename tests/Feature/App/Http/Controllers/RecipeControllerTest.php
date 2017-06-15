@@ -2,10 +2,26 @@
 
 namespace tests\Feature\App\Http\Controllers;
 
+use App\Model\Repository\CsvRecipeRepository;
+use App\Model\Repository\RecipeRepositoryInterface;
 use Tests\TestCase;
 
 class RecipeControllerTest extends TestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $fixturePath = $this->app['config']->get('app')['csv_path'];
+        $fixtureDir = dirname($fixturePath);
+        $tempFixturePath = tempnam($fixtureDir, 'controller_test_');
+        copy($fixturePath, $tempFixturePath);
+
+        $this->app->singleton(RecipeRepositoryInterface::class, function ($app) use ($tempFixturePath) {
+            return new CsvRecipeRepository($tempFixturePath);
+        });
+    }
+
     public function testFetchingRecipeByIdFound()
     {
         $response = $this->json('GET', '/api/recipe/1');
@@ -68,5 +84,40 @@ class RecipeControllerTest extends TestCase
                     ]
                 ]
             ]);
+    }
+
+    public function testCreateRecipe()
+    {
+        $response = $this->json('POST', '/api/recipe', [
+            'title' => 'New Recipe',
+            'description' => 'Some Some',
+        ]);
+
+        $response
+            ->assertStatus(201)
+            ->assertJson([
+                'data' => [
+                    'id' => 5,
+                    'title' => 'New Recipe',
+                    'description' => 'Some Some',
+                    'calories' => '',
+                    'protein' => '',
+                    'fat' => '',
+                    'carbohydrates' => '',
+                ]
+            ]);
+    }
+
+    protected function tearDown()
+    {
+        $fixturePath = $this->app['config']->get('app')['csv_path'];
+        $fixtureDir = dirname($fixturePath);
+        foreach (glob($fixtureDir . '/controller_test_*') as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+
+        parent::tearDown();
     }
 }

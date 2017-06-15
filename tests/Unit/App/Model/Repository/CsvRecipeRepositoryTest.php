@@ -8,13 +8,15 @@ use Tests\TestCase;
 
 class CsvRecipeRepositoryTest extends TestCase
 {
+    const CSV_PATH = '/tests/Fixtures/recipe-data.csv';
+
     /** @var CsvRecipeRepository */
     private $csvRepository;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->csvRepository = new CsvRecipeRepository(base_path('/tests/Fixtures/recipe-data.csv'));
+        $this->csvRepository = new CsvRecipeRepository(base_path(static::CSV_PATH));
     }
 
     public function testFind()
@@ -84,5 +86,57 @@ class CsvRecipeRepositoryTest extends TestCase
                 'expectedTitles' => ['My Recipe', 'My Recipe 2'],
             ],
         ];
+    }
+
+    public function testSaveNewRecipe()
+    {
+        $fixturePath = base_path(static::CSV_PATH);
+        $fixtureDir = dirname($fixturePath);
+        $tempFixturePath = tempnam($fixtureDir, 'save_test_');
+        copy($fixturePath, $tempFixturePath);
+
+        $csvRepository = new CsvRecipeRepository($tempFixturePath);
+
+        $recipe = new Recipe();
+        $recipe->setTitle('Test Recipe');
+        $recipe->setMarketingDescription('description');
+
+        $csvRepository->save($recipe);
+
+        $this->assertCount(5, $csvRepository->findBy());
+        $savedRecipe = $csvRepository->find(5);
+        $this->assertEquals('Test Recipe', $savedRecipe->getTitle());
+    }
+
+    public function testSaveExistingRecipe()
+    {
+        $fixturePath = base_path(static::CSV_PATH);
+        $fixtureDir = dirname($fixturePath);
+        $tempFixturePath = tempnam($fixtureDir, 'save_test_');
+        copy($fixturePath, $tempFixturePath);
+
+        $csvRepository = new CsvRecipeRepository($tempFixturePath);
+
+        $recipe = $csvRepository->find(3);
+        $recipe->setTitle('new title');
+
+        $csvRepository->save($recipe);
+
+        $this->assertCount(4, $csvRepository->findBy());
+        $savedRecipe = $csvRepository->find(3);
+        $this->assertEquals('new title', $savedRecipe->getTitle());
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        $fixturePath = base_path(static::CSV_PATH);
+        $fixtureDir = dirname($fixturePath);
+        foreach (glob($fixtureDir . '/save_test_*') as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
     }
 }

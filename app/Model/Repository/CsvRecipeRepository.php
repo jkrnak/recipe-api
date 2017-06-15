@@ -9,6 +9,8 @@ use App\Model\Recipe;
  */
 class CsvRecipeRepository implements RecipeRepositoryInterface
 {
+    const DATE_FORMAT = 'd/m/Y H:i:s';
+
     /** @var string */
     private $csvPath;
 
@@ -90,13 +92,52 @@ class CsvRecipeRepository implements RecipeRepositoryInterface
     }
 
 
+    /**
+     * {@inheritdoc}
+     */
+    public function save(Recipe $recipe)
+    {
+        $fpOriginal = fopen($this->csvPath, 'r');
+        $tempfile = tempnam(dirname($this->csvPath), 'temp_');
+        $fpNew = fopen($tempfile, 'w');
+
+        // this will be slow on large dataset, good enough for small CSVs
+        // should be migrated to proper storage backend
+        $maxId = 0;
+        $recipeSaved = false;
+        while ($row = fgetcsv($fpOriginal)) {
+            $maxId = max($maxId, (int) $row[0]);
+            if ($row[0] == $recipe->getId()) {
+                fputcsv($fpNew, $this->createRowFromRecipe($recipe));
+                $recipeSaved = true;
+            } else {
+                fputcsv($fpNew, $row);
+            }
+        }
+
+        if (!$recipeSaved) {
+            $recipe->setId($maxId + 1);
+            fputcsv($fpNew, $this->createRowFromRecipe($recipe));
+        }
+
+        fclose($fpOriginal);
+        fclose($fpNew);
+        unlink($this->csvPath);
+        rename($tempfile, $this->csvPath);
+    }
+
     private function createRecipeFromRow(array $row): Recipe
     {
         $recipe = new Recipe();
+
+        $utc = new \DateTimeZone('UTC');
+        $createdAt = \DateTimeImmutable::createFromFormat(static::DATE_FORMAT, $row[1], $utc);
+        $updatedAt = \DateTimeImmutable::createFromFormat(static::DATE_FORMAT, $row[2], $utc);
+
         $recipe
             ->setId((int) $row[0])
-            ->setCreatedAt(new \DateTimeImmutable(strtotime($row[1])))
-            ->setUpdatedAt(new \DateTimeImmutable(strtotime($row[2])))
+            ->setCreatedAt($createdAt)
+            ->setUpdatedAt($updatedAt)
             ->setBoxType($row[3])
             ->setTitle($row[4])
             ->setSlug($row[5])
@@ -122,5 +163,37 @@ class CsvRecipeRepository implements RecipeRepositoryInterface
             ->setGoustoReference((int) $row[25]);
 
         return $recipe;
+    }
+
+    private function createRowFromRecipe(Recipe $recipe): array
+    {
+        return [
+            $recipe->getId(),
+            $recipe->getCreatedAt()->format(static::DATE_FORMAT),
+            $recipe->getUpdatedAt()->format(static::DATE_FORMAT),
+            $recipe->getBoxType(),
+            $recipe->getTitle(),
+            $recipe->getSlug(),
+            $recipe->getShortTitle(),
+            $recipe->getMarketingDescription(),
+            $recipe->getCaloriesKcal(),
+            $recipe->getProteinGrams(),
+            $recipe->getFatGrams(),
+            $recipe->getCarbsGrams(),
+            $recipe->getBulletpoint1(),
+            $recipe->getBulletpoint2(),
+            $recipe->getBulletpoint3(),
+            $recipe->getRecipeDietTypeId(),
+            $recipe->getSeason(),
+            $recipe->getBase(),
+            $recipe->getProteinSource(),
+            $recipe->getPreparationTimeMinutes(),
+            $recipe->getShelfLifeDays(),
+            $recipe->getEquipmentNeeded(),
+            $recipe->getOriginCountry(),
+            $recipe->getRecipeCuisine(),
+            implode(',', $recipe->getInYourBox()),
+            $recipe->getGoustoReference(),
+        ];
     }
 }

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Model\ListingParameters;
+use App\Model\Recipe;
 use App\Model\Repository\RecipeRepositoryInterface;
 use App\Transformer\Generic\RecipeTransformer;
 use EllipseSynergie\ApiResponse\Contracts\Response;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as IlluminateResponse;
 
 class RecipeController extends Controller
 {
@@ -15,7 +17,6 @@ class RecipeController extends Controller
 
     /** @var RecipeRepositoryInterface */
     private $recipeRepository;
-
 
     public function __construct(Response $response, RecipeRepositoryInterface $recipeRepository)
     {
@@ -45,5 +46,17 @@ class RecipeController extends Controller
         );
 
         return $this->response->withCollection($recipes, new RecipeTransformer());
+    }
+
+    public function store(Request $request)
+    {
+        $transformer = new RecipeTransformer();
+        $recipe = $transformer->reverseTransform($request->json()->all());
+
+        $this->recipeRepository->save($recipe);
+
+        return $this->response
+            ->setStatusCode(IlluminateResponse::HTTP_CREATED)
+            ->withItem($recipe, new RecipeTransformer());
     }
 }
